@@ -99,7 +99,7 @@ class Feedster
         }
 
         if ($settings->post_max_number <= 0) {
-            $this->dataRowsLimit = false;
+            $this->dataRowsLimit = 1000;
         }
 
         return true;
@@ -132,7 +132,7 @@ class Feedster
      */
     public function getFeed()
     {
-        $feedData     = $this->source->getData();
+        $feedData     = $this->source->getData($this->dataRowsLimit);
         $renderedData = $this->renderer->renderData($feedData);
 
         return $renderedData;

@@ -23,6 +23,11 @@ class PostsSource
     implements IDataSource
 {
     /**
+     * Maximum number of items to display in the feed
+     */
+    const MAX_NO_ITEMS = 10;
+
+    /**
      * Cache for the data
      *
      * @var array|mixed
@@ -49,7 +54,7 @@ class PostsSource
      *
      * @return mixed
      */
-    public function loadData()
+    public function loadData($maxItems = self::MAX_NO_ITEMS)
     {
         $posts = null;
 
@@ -58,7 +63,8 @@ class PostsSource
         }
         $model = new Post();
         $posts = $model->listFrontEnd([
-            'sort'  => 'published_at DESC'
+            'sort'    => 'published_at DESC',
+            'perPage' => $maxItems,
         ]);
 
         foreach ($posts as $post) {
