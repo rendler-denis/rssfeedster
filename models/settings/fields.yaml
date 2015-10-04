@@ -1,0 +1,70 @@
+fields:
+        feed_url:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.feed_url.label
+            commentAbove:   koderhut.rssfeedster::lang.settings.fields.feed_url.comment
+            default:        '/rss.xml'
+
+tabs:
+    fields:
+#    General tab
+        feed_title:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.feed_title.label
+            placeholder:    koderhut.rssfeedster::lang.settings.fields.feed_title.placeholder
+            comment:        koderhut.rssfeedster::lang.settings.fields.feed_title.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.feed_title.description
+
+        feed_description:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.feed_description.label
+            comment:        koderhut.rssfeedster::lang.settings.fields.feed_description.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.feed_description.description
+            type:           textarea
+            size:           small
+
+        feed_category:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.feed_category.label
+            placeholder:    koderhut.rssfeedster::lang.settings.fields.feed_category.placeholder
+            comment:        koderhut.rssfeedster::lang.settings.fields.feed_category.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.feed_category.description
+
+        feed_copyright:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.feed_copyright.label
+            placeholder:    koderhut.rssfeedster::lang.settings.fields.feed_copyright.placeholder
+            comment:        koderhut.rssfeedster::lang.settings.fields.feed_copyright.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.feed_copyright.description
+
+        feed_language:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.feed_language.label
+            placeholder:    koderhut.rssfeedster::lang.settings.fields.feed_language.placeholder
+            comment:        koderhut.rssfeedster::lang.settings.fields.feed_language.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.feed_language.description
+            type:           dropdown
+
+
+#    Posts tab
+        post_max_number:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.posts_title
+            label:          koderhut.rssfeedster::lang.settings.fields.post_max_number.label
+            comment:        koderhut.rssfeedster::lang.settings.fields.post_max_number.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.post_max_number.description
+            default:        20
+
+        post_full_content:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.posts_title
+            label:          koderhut.rssfeedster::lang.settings.fields.post_full_content.label
+            comment:        koderhut.rssfeedster::lang.settings.fields.post_full_content.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.post_full_content.description
+            type:           checkbox
+
+        post_page:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.posts_title
+            label:          koderhut.rssfeedster::lang.settings.fields.post_page.label
+            comment:        koderhut.rssfeedster::lang.settings.fields.post_page.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.post_full_content.description
+            type:           dropdown
+            default:        'blog/post'
