@@ -3,7 +3,8 @@
 return [
     'plugin'    => [
         'name'        => 'KoderHut - RSSFeedster',
-        'description' => 'RSS Feed on-the-fly generator.'
+        'description' => 'RSS Feed on-the-fly generator.',
+        'namespace'   => 'KoderHut',
     ],
 
     'settings'  => [
@@ -66,6 +67,12 @@ return [
                 'label'       => 'Display Full Content',
                 'comment'     => 'Display the full post content into the feed or an excerpt',
                 'description' => 'Display the full post content into the feed or an excerpt',
+            ],
+
+            'post_page' => [
+                'label'       => 'Post page',
+                'comment'     => 'Set the page used to render the post',
+                'description' => 'Set the page used to render the post',
             ],
 
         ],

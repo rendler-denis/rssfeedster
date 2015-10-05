@@ -98,7 +98,7 @@ class XmlRenderer
             $xmlItem->appendChild($description);
 
             $xmlItem->appendChild(
-                $this->xml->createElement('pubDate', date('D, d-M-Y', $item->published_at))
+                $this->xml->createElement('pubDate', $item->published_at->toFormattedDateString())
             );
 
             $channel->appendChild($xmlItem);

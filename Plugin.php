@@ -120,7 +120,7 @@ class Plugin
                 'class'       => 'KoderHut\RssFeedster\Models\Settings',
                 'order'       => 500,
                 'keywords'    => 'rss feed',
-                'category'    => 'koderhut.rssfeedster::lang.plugin.name',
+                'category'    => 'koderhut.rssfeedster::lang.plugin.namespace',
             ]
         ];
     }
