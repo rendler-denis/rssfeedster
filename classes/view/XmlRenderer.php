@@ -93,7 +93,7 @@ class XmlRenderer
 
             $description = $this->xml->createElement('description');
             $description->appendChild(
-                $this->xml->createCDATASection($item->summary)
+                $this->xml->createCDATASection($item->feed_content)
             );
             $xmlItem->appendChild($description);
 

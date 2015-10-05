@@ -50,7 +50,7 @@ class Plugin
             'description' => 'koderhut.rssfeed::lang.plugin.description',
             'author'      => 'Denis-Florin Rendler (KoderHut)',
             'icon'        => 'icon-rss',
-            'homepage'    => 'https://github.com/rainlab/blog-plugin',
+            'homepage'    => 'https://github.com/rendler-denis/rssfeedster',
         ];
     }
 

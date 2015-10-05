@@ -35,6 +35,13 @@ class PostsSource
     protected $data = [];
 
     /**
+     * Disaply the full content of the post
+     *
+     * @var  bool
+     */
+    protected $displayFullContent = false;
+
+    /**
      * Constructor
      *
      * @param array $params
@@ -69,6 +76,8 @@ class PostsSource
 
         foreach ($posts as $post) {
             $post->setUrl($this->page, $this->controller);
+
+            $post->feed_content = true === $this->displayFullContent ? $post->content : $post->summary;
         }
 
         return $this->data = $posts;
@@ -79,14 +88,19 @@ class PostsSource
      *
      * @return mixed
      */
-    public function getData()
+    public function getData($maxItems = self::MAX_NO_ITEMS)
     {
         if (null !== $this->data && !empty($this->data)) {
             return $this->data;
         }
 
-        $this->data = $this->loadData();
+        $this->data = $this->loadData($maxItems);
 
         return $this->data;
+    }
+
+    public function setDisplayFullContent($fullContent)
+    {
+        $this->displayFullContent = $fullContent;
     }
 }
