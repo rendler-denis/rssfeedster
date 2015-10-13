@@ -35,6 +35,13 @@ class PostsSource
     protected $data = [];
 
     /**
+     * Disaply the full content of the post
+     *
+     * @var  bool
+     */
+    protected $displayFullContent = false;
+
+    /**
      * Constructor
      *
      * @param array $params
@@ -51,6 +58,8 @@ class PostsSource
 
     /**
      * Load the blog posts
+     *
+     * @param int $maxItems
      *
      * @return mixed
      */
@@ -69,6 +78,9 @@ class PostsSource
 
         foreach ($posts as $post) {
             $post->setUrl($this->page, $this->controller);
+            $post->comments_url = '';
+
+            $post->feed_content = true === $this->displayFullContent ? $post->content : $post->summary;
         }
 
         return $this->data = $posts;
@@ -77,16 +89,28 @@ class PostsSource
     /**
      * Retrieve posts from cache or load them and then return them
      *
+     * @param int $maxItems
+     *
      * @return mixed
      */
-    public function getData()
+    public function getData($maxItems = self::MAX_NO_ITEMS)
     {
         if (null !== $this->data && !empty($this->data)) {
             return $this->data;
         }
 
-        $this->data = $this->loadData();
+        $this->data = $this->loadData($maxItems);
 
         return $this->data;
+    }
+
+    /**
+     * Set if we display the full post content or a summary
+     *
+     * @param bool $fullContent
+     */
+    public function setDisplayFullContent($fullContent = true)
+    {
+        $this->displayFullContent = $fullContent;
     }
 }

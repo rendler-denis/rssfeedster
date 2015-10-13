@@ -1,1 +1,5 @@
 1.0.1: First version of RssFeedster plug-in
+
+1.0.2: Fix functionality bugs and plug-in description bugs
+
+1.1.1: Add XML template for the RSS feed and cleanup of feed generation code

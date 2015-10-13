@@ -2,7 +2,7 @@
 
 return [
     'plugin'    => [
-        'name'        => 'KoderHut - RSSFeedster',
+        'name'        => 'RSSFeedster',
         'description' => 'RSS Feed on-the-fly generator.',
         'namespace'   => 'KoderHut',
     ],
