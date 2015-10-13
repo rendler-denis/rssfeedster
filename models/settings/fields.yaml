@@ -45,6 +45,14 @@ tabs:
             description:    koderhut.rssfeedster::lang.settings.fields.feed_language.description
             type:           dropdown
 
+        comments_anchor:
+            tab:            koderhut.rssfeedster::lang.settings.tabs.general_title
+            label:          koderhut.rssfeedster::lang.settings.fields.comments_anchor.label
+            placeholder:    koderhut.rssfeedster::lang.settings.fields.comments_anchor.placeholder
+            comment:        koderhut.rssfeedster::lang.settings.fields.comments_anchor.comment
+            description:    koderhut.rssfeedster::lang.settings.fields.comments_anchor.description
+            type:           text
+
 
 #    Posts tab
         post_max_number:

@@ -52,8 +52,9 @@ class PostsSource
             return $this;
         }
 
-        $this->page = $params['page'];
-        $this->controller = $params['controller'];
+        $this->page           = $params['page'];
+        $this->controller     = $params['controller'];
+        $this->commentsAnchor = $params['comments_anchor'];
     }
 
     /**
@@ -78,7 +79,7 @@ class PostsSource
 
         foreach ($posts as $post) {
             $post->setUrl($this->page, $this->controller);
-            $post->comments_url = '';
+            $post->comments_url = "{$post->url}/#{$this->commentsAnchor}";
 
             $post->feed_content = true === $this->displayFullContent ? $post->content : $post->summary;
         }

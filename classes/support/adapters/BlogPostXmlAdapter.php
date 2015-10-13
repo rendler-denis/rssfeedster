@@ -49,7 +49,14 @@ class BlogPostXmlAdapter
             break;
 
             case 'category':
+                $categories = $dataItem->categories;
+                if (0 !== $categories->count()) {
+                    $postCategories = new \DOMCdataSection(
+                        implode(', ', $categories->lists('name'))
+                    );
 
+                    $item->appendChild($postCategories);
+                }
             break;
 
             case 'description':

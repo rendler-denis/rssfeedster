@@ -82,8 +82,9 @@ class Plugin
          */
         $this->app->bind('KoderHut\RssFeedster\DataSource', function($app)
         {
-            $config['page']       = Settings::get('post_page');
-            $config['controller'] = new Controller();
+            $config['page']            = Settings::get('post_page');
+            $config['comments_anchor'] = Settings::get('comments_anchor');
+            $config['controller']      = new Controller();
 
             return new PostsSource($config);
         });

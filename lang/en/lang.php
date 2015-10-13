@@ -75,6 +75,13 @@ return [
                 'description' => 'Set the page used to render the post',
             ],
 
+            'comments_anchor' => [
+                'label'       => 'Comments section anchor',
+                'comment'     => 'Set ID of the element hosting the comments section',
+                'description' => 'Set ID of the element hosting the comments section',
+                'placeholder' => 'post-comments',
+            ],
+
         ],
 
     ],
