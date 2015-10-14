@@ -7,6 +7,9 @@
 
 namespace KoderHut\RssFeedster\Classes\Support\Adapters;
 
+use DomElement,
+    DOMCdataSection;
+
 use KoderHut\RssFeedster\Classes\Contracts\IAdapter;
 
 /**
@@ -44,28 +47,31 @@ class BlogPostXmlAdapter
             break;
 
             case 'dc:creator':
-                $creator = new \DOMCdataSection ($dataItem->user->full_name);
+                $creator = new DOMCdataSection(
+                    "{$dataItem->user->email} ({$dataItem->user->full_name})"
+                );
                 $item->appendChild($creator);
             break;
 
             case 'category':
                 $categories = $dataItem->categories;
-                if (0 !== $categories->count()) {
-                    $postCategories = new \DOMCdataSection(
-                        implode(', ', $categories->lists('name'))
-                    );
 
-                    $item->appendChild($postCategories);
+                if (!empty($item->nodeValue)) {
+                    break;
+                }
+
+                if (0 !== $categories->count()) {
+                    $this->addCategories($item, $categories->lists('name'));
                 }
             break;
 
             case 'description':
-                $description = new \DOMCdataSection($dataItem->summary);
+                $description = new DOMCdataSection($dataItem->summary);
                 $item->appendChild($description);
             break;
 
             case 'content:encoded':
-                $content = new \DOMCdataSection($dataItem->feed_content);
+                $content = new DOMCdataSection($dataItem->feed_content);
                 $item->appendChild($content);
             break;
 
@@ -74,6 +80,26 @@ class BlogPostXmlAdapter
             break;
 
             default:
+            break;
+        }
+    }
+
+    /**
+     * Parse and add the categories of the post to the current item
+     *
+     * @param DomElement $categoryNode
+     * @param array      $categories
+     */
+    protected function addCategories(DomElement $categoryNode, $categories)
+    {
+        $itemNode = $categoryNode->parentNode;
+        $itemNode->removeChild($categoryNode);
+
+        foreach ($categories as $categoryName) {
+            $newCategNode = clone($categoryNode);
+            $newCategNode->appendChild(new DOMCdataSection($categoryName));
+
+            $itemNode->appendChild($newCategNode);
         }
     }
 }
