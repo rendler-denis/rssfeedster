@@ -141,8 +141,23 @@ class Plugin
                 'order'       => 500,
                 'keywords'    => 'rss feed',
                 'category'    => 'KoderHut',
+                'permissions' => ['koderhut.rssfeedster.access_config'],
             ]
         ];
     }
 
+    /**
+     * Register plug-in permissions
+     *
+     * @return array
+     */
+    public function registerPermissions()
+    {
+        return [
+            'koderhut.rssfeedster.access_config' => [
+                'label' => 'koderhut.rssfeedster::lang.messages.permissions.access_config_label',
+                'tab'   => 'koderhut.rssfeedster::lang.plugin.name'
+            ],
+        ];
+    }
 }

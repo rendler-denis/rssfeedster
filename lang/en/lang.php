@@ -21,6 +21,7 @@ return [
                 'label'       => 'RSS Feed URL (without domain)',
                 'comment'     => 'The URL you want assigned to the RSS feed without the install path',
                 'description' => '',
+                'default'     => '/rss.xml',
             ],
 
             'feed_title' => [
@@ -28,6 +29,7 @@ return [
                 'comment'     => 'The title of your RSS feed (can also be the site name)',
                 'description' => 'The title of your RSS feed (can also be the site name)',
                 'placeholder' => '',
+                'default'     => 'RSS Feed Title',
             ],
 
             'feed_description' => [
@@ -84,6 +86,12 @@ return [
 
         ],
 
+    ],
+
+    'messages'  => [
+        'permissions' => [
+            'access_config_label' => 'Access Feed Configs'
+        ],
     ],
 
 ];

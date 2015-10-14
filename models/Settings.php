@@ -49,6 +49,20 @@ class Settings
         'feed_title'   => 'required',
     ];
 
+
+    /**
+     * Init default data
+     */
+    public function initSettingsData()
+    {
+        $this->feed_title
+            = Lang::get('koderhut.rssfeedster::lang.settings.fields.feed_title.default');
+        $this->feed_url
+            = Lang::get('koderhut.rssfeedster::lang.settings.fields.feed_url.default');
+        $this->post_page
+            = Page::sortBy('baseFileName')->where('baseFileName', '404')->first()->getBaseFileName();
+    }
+
     /**
      * Return the post_page dropdown options
      *
