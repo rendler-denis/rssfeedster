@@ -59,8 +59,7 @@ class Settings
             = Lang::get('koderhut.rssfeedster::lang.settings.fields.feed_title.default');
         $this->feed_url
             = Lang::get('koderhut.rssfeedster::lang.settings.fields.feed_url.default');
-        $this->post_page
-            = Page::sortBy('baseFileName')->where('baseFileName', '404')->first()->getBaseFileName();
+        $this->post_page = '404';
     }
 
     /**

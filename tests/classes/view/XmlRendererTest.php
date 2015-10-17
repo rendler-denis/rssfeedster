@@ -7,11 +7,13 @@
 
 namespace KoderHut\RssFeedster\Tests\Classes\View;
 
+use Carbon\Carbon;
+use KoderHut\RssFeedster\Classes\Support\Adapters\BlogPostXmlAdapter;
 use PluginTestCase,
     Model;
 
+use KoderHut\RssFeedster\Classes\Contracts\IAdapter;
 use KoderHut\RssFeedster\Classes\View\XmlRenderer;
-
 
 /**
  * Class XmlRendererTest
@@ -47,25 +49,44 @@ XML;
      *
      * @var string
      */
-    private $xmlChannelStructure = <<<XML
+    private $xmlItemStructure = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <item>
-      <title>post title</title>
-      <link><![CDATA[post url]]></link>
-      <guid><![CDATA[post url]]></guid>
-      <description><![CDATA[post summary]]></description>
-      <pubDate>Tue, 29-Sep-2015</pubDate>
-    </item>
+    <description />
+    <title />
+    <category />
+    <copyright />
+    <language />
+    <link />
+    <atom:link rel="self" type="application/atom+xml" href=""/>
+    <generator />
+    <lastBuildDate />
 
     <item>
-      <title>post title</title>
-      <link><![CDATA[post url]]></link>
-      <guid><![CDATA[post url]]></guid>
-      <description><![CDATA[post summary]]></description>
-      <pubDate>Tue, 29-Sep-2015</pubDate>
+      <title />
+      <link />
+      <guid />
+      <description />
+      <pubDate />
     </item>
+  </channel>
+</rss>
+XML;
+
+    private $xmlTestItemStructure = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <description />
+    <title />
+    <category />
+    <copyright />
+    <language />
+    <link />
+    <atom:link rel="self" type="application/atom+xml" href=""/>
+    <generator />
+    <lastBuildDate />
 
     <item>
       <title>post title</title>
@@ -83,7 +104,7 @@ XML;
      *
      * @var null
      */
-    private $xml = null;
+    private $stub = null;
 
     /**
      * Set up the test
@@ -92,14 +113,14 @@ XML;
     {
         parent::setUp();
 
-        $this->xml = new XmlRenderer([
-            'description' => 'feed description',
-            'title'       => 'feed title',
-            'category'    => 'feed category',
-            'copyright'   => 'feed copyright',
-            'language'    => 'en_gb',
-            'link'        => 'http://koderhut.eu'
-        ]);
+        $adapterObj = new BlogPostXmlAdapter();
+
+        $this->stub
+            = $this->getMockBuilder(IAdapter::class)->getMock();
+
+        $this->stub
+            ->method('getDataValue')
+            ->willReturnCallback([$adapterObj, 'getDataValue']);
     }
 
     /**
@@ -109,7 +130,7 @@ XML;
     {
         parent::tearDown();
 
-        unset($this->xml);
+        unset($this->stub);
     }
 
     /**
@@ -117,13 +138,25 @@ XML;
      */
     public function testObjectBuild()
     {
+        $xml        = new XmlRenderer(
+            [
+                'description' => 'feed description',
+                'title'       => 'feed title',
+                'category'    => 'feed category',
+                'copyright'   => 'feed copyright',
+                'language'    => 'en_gb',
+                'link'        => 'http://koderhut.eu'
+            ],
+            $this->xmlBaseStructure,
+            $this->stub
+        );
         $baseXmlDoc = new \DOMDocument();
         $objXmlDoc  = new \DOMDocument();
 
-        $objXmlDoc->loadXml($this->xml->renderData());
+        $objXmlDoc->loadXml($xml->renderData());
         $baseXmlDoc->loadXml($this->xmlBaseStructure);
 
-        $this->assertEquals(XmlRenderer::RENDERER_CONTENT_TYPE, $this->xml->getContentType());
+        $this->assertEquals(XmlRenderer::RENDERER_CONTENT_TYPE, $xml->getContentType());
 
         $this->assertEqualXMLStructure($baseXmlDoc->firstChild, $objXmlDoc->firstChild);
 
@@ -135,24 +168,36 @@ XML;
      */
     public function testItemRender()
     {
+        $xml         = new XmlRenderer(
+            [
+                'description' => 'feed description',
+                'title'       => 'feed title',
+                'category'    => 'feed category',
+                'copyright'   => 'feed copyright',
+                'language'    => 'en_gb',
+                'link'        => 'http://koderhut.eu'
+            ],
+            $this->xmlItemStructure,
+            $this->stub
+        );
         $objXmlDoc   = new \DOMDocument();
         $baseRssDoc  = new \DOMDocument();
         $objItem     = false;
         $baseItem    = false;
         $attributes = [
-            'title'   => 'post title',
-            'url'     => 'post url',
-            'summary' => 'post summary',
-            'pubDate' => 'Tue, 29-Sep-2015',
+            'title'        => 'post title',
+            'url'          => 'post url',
+            'summary'      => 'post summary',
+            'published_at' => new Carbon('Tue, 29-Sep-2015'),
         ];
-        $items      = [
+        $items       = [
             Model::make($attributes),
             Model::make($attributes),
             Model::make($attributes),
         ];
 
-        $objXmlDoc->loadXml($this->xml->renderData($items));
-        $baseRssDoc->loadXml($this->xmlChannelStructure);
+        $objXmlDoc->loadXml($xml->renderData($items));
+        $baseRssDoc->loadXml($this->xmlTestItemStructure);
 
         $this->assertEqualXMLStructure(
             $baseRssDoc->getElementsByTagName('item')->item(0),
@@ -175,4 +220,5 @@ XML;
         );
 
     }
+
 }

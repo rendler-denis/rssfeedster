@@ -74,7 +74,7 @@ class XmlRenderer
     {
         $channel  = $this->xml->getElementsByTagName('channel')->item(0);
 
-        if (0 == count($data) || !$this->itemTmpl->hasChildNodes()) {
+        if (0 == count($data) || null === $this->itemTmpl || !$this->itemTmpl->hasChildNodes()) {
             return $this->xml->saveXML();
         }
 
