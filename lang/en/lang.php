@@ -2,7 +2,7 @@
 
 return [
     'plugin'    => [
-        'name'        => 'KoderHut - RSSFeedster',
+        'name'        => 'RSSFeedster',
         'description' => 'RSS Feed on-the-fly generator.',
         'namespace'   => 'KoderHut',
     ],
@@ -21,6 +21,7 @@ return [
                 'label'       => 'RSS Feed URL (without domain)',
                 'comment'     => 'The URL you want assigned to the RSS feed without the install path',
                 'description' => '',
+                'default'     => '/rss.xml',
             ],
 
             'feed_title' => [
@@ -28,6 +29,7 @@ return [
                 'comment'     => 'The title of your RSS feed (can also be the site name)',
                 'description' => 'The title of your RSS feed (can also be the site name)',
                 'placeholder' => '',
+                'default'     => 'RSS Feed Title',
             ],
 
             'feed_description' => [
@@ -75,8 +77,21 @@ return [
                 'description' => 'Set the page used to render the post',
             ],
 
+            'comments_anchor' => [
+                'label'       => 'Comments section anchor',
+                'comment'     => 'Set ID of the element hosting the comments section',
+                'description' => 'Set ID of the element hosting the comments section',
+                'placeholder' => 'post-comments',
+            ],
+
         ],
 
+    ],
+
+    'messages'  => [
+        'permissions' => [
+            'access_config_label' => 'Access Feed Configs'
+        ],
     ],
 
 ];

@@ -7,6 +7,7 @@
 
 namespace KoderHut\RssFeedster\Classes\View;
 
+use KoderHut\RssFeedster\Classes\Contracts\IAdapter;
 use KoderHut\RssFeedster\Classes\Contracts\IRenderer as Renderer;
 use KoderHut\RssFeedster\Classes\Feedster;
 
@@ -23,7 +24,7 @@ class XmlRenderer
     /**
      * Content type header
      */
-    const RENDERER_CONTENT_TYPE = 'application/atom+xml';
+    const RENDERER_CONTENT_TYPE = 'text/xml';
 
     /**
      * Sections that need to be wrapped into a CDATA element
@@ -35,24 +36,29 @@ class XmlRenderer
     /**
      * Init method used to initialize the feed document
      *
-     * @param array $channelData base channel data taken from settings
+     * @param array   $channelData base channel data taken from settings
+     * @param string  $xmlTemplate
+     * @param IAdapter $adapter
      */
-    public function __construct($channelData = [])
+    public function __construct($channelData = [], $xmlTemplate = null, IAdapter $adapter = null)
     {
-        $xmlDoc         = new \DOMDocument('1.0', 'UTF-8');
-        $rssElement     = $xmlDoc->createElement('rss');
-        $channelElement = $xmlDoc->createElement('channel');
+        $this->adapter = $adapter;
 
+        $xmlDoc = new \DOMDocument('1.0', 'UTF-8');
         $xmlDoc->formatOutput = true;
 
-        $rssElement->setAttribute('version', '2.0');
-        $rssElement->setAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
+        if (null !== $xmlTemplate) {
+            $xmlDoc->loadXML($xmlTemplate);
+        }
 
-        $this->addChannelData($channelElement, $channelData, $xmlDoc);
+        $this->itemTmpl = $xmlDoc->getElementsByTagName('item')->item(0);
 
-        $rssElement->appendChild($channelElement);
+        if (null !== $this->itemTmpl) {
+            $channelElement = $xmlDoc->getElementsByTagName('channel')->item(0);
+            $channelElement->removeChild($this->itemTmpl);
+        }
 
-        $xmlDoc->appendChild($rssElement);
+        $this->addChannelData($channelData, $xmlDoc);
 
         $this->xml = $xmlDoc;
     }
@@ -66,44 +72,24 @@ class XmlRenderer
      */
     public function renderData($data = [])
     {
-        $channel = $this->xml->getElementsByTagName('channel')->item(0);
+        $channel  = $this->xml->getElementsByTagName('channel')->item(0);
 
-        if (empty($data)) {
+        if (0 == count($data) || null === $this->itemTmpl || !$this->itemTmpl->hasChildNodes()) {
             return $this->xml->saveXML();
         }
 
-        foreach ($data as $item) {
-            $xmlItem = $this->xml->createElement('item');
+        foreach ($data as $dataItem) {
+            $xmlItem = clone($this->itemTmpl);
 
-            $xmlItem->appendChild(
-                $this->xml->createElement('title', $item->title)
-            );
+            foreach ($xmlItem->childNodes as $node) {
+                if (!$node instanceof \DOMElement) {
+                    continue;
+                }
 
-            $link = $this->xml->createElement('link');
-            $link->appendChild(
-                $this->xml->createCDATASection($item->url)
-            );
-            $xmlItem->appendChild($link);
-
-            $guid = $this->xml->createElement('guid');
-            $guid->appendChild(
-                $this->xml->createCDATASection($item->url)
-            );
-            $xmlItem->appendChild($guid);
-
-            $description = $this->xml->createElement('description');
-            $description->appendChild(
-                $this->xml->createCDATASection($item->feed_content)
-            );
-            $xmlItem->appendChild($description);
-
-            $xmlItem->appendChild(
-                $this->xml->createElement('pubDate', $item->published_at->toFormattedDateString())
-            );
+                $this->adapter->getDataValue($node, $dataItem);
+            }
 
             $channel->appendChild($xmlItem);
-
-            unset($link, $description, $guid, $xmlItem);
         }
 
         return $this->xml->saveXML();
@@ -125,32 +111,24 @@ class XmlRenderer
      * @param \DomDocument $xmlDoc
      * @param array        $channelData
      */
-    protected function addChannelData($channelEl, $channelData, $xmlDoc)
+    protected function addChannelData($channelData, $xmlDoc)
     {
-        $atomLink  = $xmlDoc->createElement('atom:link');
-        $generator = $xmlDoc->createElement('generator', Feedster::FEED_GENERATOR_NAME);
-        $buildDate = $xmlDoc->createElement('lastBuildDate', date('D, d-M-Y'));
+        $xmlDoc->getElementsByTagName('generator')->item(0)
+            ->textContent = Feedster::FEED_GENERATOR_NAME;
+        $xmlDoc->getElementsByTagName('lastBuildDate')->item(0)
+            ->textContent = date('r');
 
         foreach ($channelData as $element => $elValue) {
-            if (in_array($element, $this->cdataSections)) {
-                $elValue = $xmlDoc->createCDATASection($elValue);
-            }
-            else {
-                $elValue = $xmlDoc->createTextNode($elValue);
-            }
+            $xmlItem = $xmlDoc->getElementsByTagName($element)->item(0);
 
-            $child = $xmlDoc->createElement($element);
-            $child->appendChild($elValue);
-
-            $channelEl->appendChild($child);
+            if ($xmlItem instanceof \DOMElement) {
+                $xmlItem->textContent = $elValue;
+            }
         }
 
-        $atomLink->setAttribute('rel', 'self');
-        $atomLink->setAttribute('type', self::RENDERER_CONTENT_TYPE);
-        $atomLink->setAttribute('href', isset($channelData['link']) ? $channelData['link']: '');
-
-        $channelEl->appendChild($atomLink);
-        $channelEl->appendChild($generator);
-        $channelEl->appendChild($buildDate);
+        $atomLink = $xmlDoc->getElementsByTagNameNS($xmlDoc->lookupNamespaceUri('atom'), 'link')->item(0);
+        if ($atomLink instanceof \DOMElement) {
+            $atomLink->setAttribute('href', isset($channelData['link']) ? $channelData['link']: '');
+        }
     }
 }

@@ -20,27 +20,6 @@ class Rss
     extends ControllerBase
 {
     /**
-     * Implement behaviours
-     *
-     * @var array
-     */
-    public $implement = [
-        'Backend.Behaviors.FormController',
-        'Backend.Behaviors.ListController'
-    ];
-
-    /**
-     * @var string
-     */
-    public $formConfig = 'config_form.yaml';
-
-    /**
-     * @var string
-     */
-    public $listConfig = 'config_list.yaml';
-
-
-    /**
      * Build the RSS feed action
      */
     public function buildRssFeed()

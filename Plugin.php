@@ -12,12 +12,15 @@ use Route,
 
 use Cms\Classes\Controller;
 
-use System\Classes\PluginBase;
+use System\Classes\PluginBase,
+    System\Classes\PluginManager;
 
 use KoderHut\RssFeedster\Classes\Feedster,
     KoderHut\RssFeedster\Classes\DataSource\PostsSource,
     KoderHut\RssFeedster\Classes\View\XmlRenderer,
-    KoderHut\RssFeedster\Models\Settings;
+    KoderHut\RssFeedster\Models\Settings,
+    KoderHut\RssFeedster\Classes\Support\Adapters\BlogPostXmlAdapter,
+    KoderHut\RssFeedster\Classes\Contracts\IAdapter;
 
 
 /**
@@ -79,10 +82,19 @@ class Plugin
          */
         $this->app->bind('KoderHut\RssFeedster\DataSource', function($app)
         {
-            $config['page']       = Settings::get('post_page');
-            $config['controller'] = new Controller();
+            $config['page']            = Settings::get('post_page');
+            $config['comments_anchor'] = Settings::get('comments_anchor');
+            $config['controller']      = new Controller();
 
             return new PostsSource($config);
+        });
+
+        /**
+         * Set up the adapter interface between the XML renderer and
+         * the blog posts data
+         */
+        $this->app->bind(IAdapter::DI_NAMESPACE, function () {
+            return new BlogPostXmlAdapter();
         });
 
         /**
@@ -98,8 +110,16 @@ class Plugin
                 'language'    => Settings::get('feed_language'),
                 'link'        => Url::action('KoderHut\RssFeedster\Controllers\Rss@buildRssFeed'),
             ];
+            $pluginPath  = PluginManager::instance()->getPluginPath(Plugin::KODERHUT_RSSFEEDSTER_NS);
+            $xmlTemplate = $pluginPath . DIRECTORY_SEPARATOR . 'resources'
+                . DIRECTORY_SEPARATOR . 'feed-template.xml';
 
-            return new XmlRenderer($config);
+            return
+                new XmlRenderer(
+                    $config,
+                    file_get_contents($xmlTemplate),
+                    $this->app->make(IAdapter::DI_NAMESPACE)
+                );
         });
 
         return;
@@ -120,9 +140,24 @@ class Plugin
                 'class'       => 'KoderHut\RssFeedster\Models\Settings',
                 'order'       => 500,
                 'keywords'    => 'rss feed',
-                'category'    => 'koderhut.rssfeedster::lang.plugin.namespace',
+                'category'    => 'KoderHut',
+                'permissions' => ['koderhut.rssfeedster.access_config'],
             ]
         ];
     }
 
+    /**
+     * Register plug-in permissions
+     *
+     * @return array
+     */
+    public function registerPermissions()
+    {
+        return [
+            'koderhut.rssfeedster.access_config' => [
+                'label' => 'koderhut.rssfeedster::lang.messages.permissions.access_config_label',
+                'tab'   => 'koderhut.rssfeedster::lang.plugin.name'
+            ],
+        ];
+    }
 }

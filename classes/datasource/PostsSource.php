@@ -52,12 +52,15 @@ class PostsSource
             return $this;
         }
 
-        $this->page = $params['page'];
-        $this->controller = $params['controller'];
+        $this->page           = $params['page'];
+        $this->controller     = $params['controller'];
+        $this->commentsAnchor = $params['comments_anchor'];
     }
 
     /**
      * Load the blog posts
+     *
+     * @param int $maxItems
      *
      * @return mixed
      */
@@ -76,7 +79,7 @@ class PostsSource
 
         foreach ($posts as $post) {
             $post->setUrl($this->page, $this->controller);
-
+            $post->comments_url = "{$post->url}/#{$this->commentsAnchor}";
             $post->feed_content = true === $this->displayFullContent ? $post->content : $post->summary;
         }
 
@@ -85,6 +88,8 @@ class PostsSource
 
     /**
      * Retrieve posts from cache or load them and then return them
+     *
+     * @param int $maxItems
      *
      * @return mixed
      */
@@ -99,7 +104,12 @@ class PostsSource
         return $this->data;
     }
 
-    public function setDisplayFullContent($fullContent)
+    /**
+     * Set if we display the full post content or a summary
+     *
+     * @param bool $fullContent
+     */
+    public function setDisplayFullContent($fullContent = true)
     {
         $this->displayFullContent = $fullContent;
     }
