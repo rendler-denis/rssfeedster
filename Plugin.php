@@ -49,8 +49,8 @@ class Plugin
     public function pluginDetails()
     {
         return [
-            'name'        => 'koderhut.rssfeed::lang.plugin.name',
-            'description' => 'koderhut.rssfeed::lang.plugin.description',
+            'name'        => 'koderhut.rssfeedster::lang.plugin.name',
+            'description' => 'koderhut.rssfeedster::lang.plugin.description',
             'author'      => 'Denis-Florin Rendler (KoderHut)',
             'icon'        => 'icon-rss',
             'homepage'    => 'https://github.com/rainlab/blog-plugin',
