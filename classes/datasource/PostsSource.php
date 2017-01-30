@@ -73,7 +73,7 @@ class PostsSource
         }
         $model = new Post();
         $posts = $model->listFrontEnd([
-            'sort'    => 'published_at DESC',
+            'sort'    => 'published_at desc',
             'perPage' => $maxItems,
         ]);
 
