@@ -6,3 +6,5 @@
   - Add XML template for the RSS feed and cleanup of feed generation code
 1.2.1:
   - Add plug-in permissions for the configuration section
+1.2.2:
+  - Fix typo preventing proper sorting of Posts when listing RSS feed. Thanks go to @Abhimanyu Saharan
