@@ -53,6 +53,12 @@ class BlogPostXmlAdapter
                 $item->appendChild($creator);
             break;
 
+            case 'media:thumbnail':
+                $item->setAttribute('url', \Config::get('app.url').ltrim($dataItem->featured_images[0]->path,'/'));
+                $item->setAttribute('width', getimagesize(\Config::get('app.url').ltrim($dataItem->featured_images[0]->path,'/'))[0]);
+                $item->setAttribute('height', getimagesize(\Config::get('app.url').ltrim($dataItem->featured_images[0]->path,'/'))[1]);
+            break;
+
             case 'category':
                 $categories = $dataItem->categories;
 
@@ -103,3 +109,4 @@ class BlogPostXmlAdapter
         }
     }
 }
+
