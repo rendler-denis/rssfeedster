@@ -8,3 +8,6 @@
   - Add plug-in permissions for the configuration section
 1.2.2:
   - Fix typo preventing proper sorting of Posts when listing RSS feed. Thanks go to @Abhimanyu Saharan
+1.2.3:
+  - Fix crash when installing plugin along default blog post
+  
