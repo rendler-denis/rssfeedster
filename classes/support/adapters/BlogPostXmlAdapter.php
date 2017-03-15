@@ -47,6 +47,9 @@ class BlogPostXmlAdapter
             break;
 
             case 'dc:creator':
+                if (!$dataItem->user instanceof User) {
+                    break;
+                }
                 $creator = new DOMCdataSection(
                     "{$dataItem->user->email} ({$dataItem->user->full_name})"
                 );
